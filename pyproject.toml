@@ -28,5 +28,4 @@ where = ["src"]
 pythonpath = ["src"]
 
 [tool.setuptools.package-data]
-"opty" = ["opty_config.example.yaml"]
 "opty.intelligence" = ["prompts/*.md"]
