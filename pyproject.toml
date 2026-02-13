@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "opty-prompt"
-version = "0.1.0a"
+version = "0.1.1a"
 description = "Prompt optimization via chain-of-thought"
 readme = "README.md"
 requires-python = ">=3.11"
@@ -19,7 +19,7 @@ dependencies = [
 dev = ["pytest>=8.0"]
 
 [project.scripts]
-opty = "opty.cli:main"
+opty-prompt = "opty.cli:main"
 
 [tool.setuptools.packages.find]
 where = ["src"]

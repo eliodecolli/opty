@@ -17,7 +17,7 @@
 ## Installation
 
 ```bash
-pip install opty
+pip install opty-prompt
 ```
 
 ## Usage
@@ -25,7 +25,7 @@ pip install opty
 Create an `opty.config.yaml` in your working directory, then run:
 
 ```bash
-opty
+opty-prompt
 ```
 
 ## Configuration
