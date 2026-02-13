@@ -1,0 +1,32 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "opty"
+version = "0.1.0"
+description = "Prompt optimization via chain-of-thought"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "google-genai==1.63.0",
+    "ollama>=0.4.0",
+    "rich==13.9.4",
+    "pyyaml>=6.0",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=8.0"]
+
+[project.scripts]
+opty = "opty.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+
+[tool.setuptools.package-data]
+"opty" = ["opty_config.example.yaml"]
+"opty.intelligence" = ["prompts/*.md"]
