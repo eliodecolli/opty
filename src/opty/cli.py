@@ -294,5 +294,10 @@ def main() -> None:
               break
 
       display_prompt(final_prompt, title="Optimized Prompt", border_style="green")
-      with open(prompt_user_to_save_output(), "w") as f:
+      
+      save_file = prompt_user_to_save_output()
+      if not save_file:
+          return
+      
+      with open(save_file, "w") as f:
           f.write(final_prompt)
