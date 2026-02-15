@@ -1,5 +1,6 @@
 import json
 from dataclasses import dataclass, asdict
+from datetime import datetime
 from pathlib import Path
 from typing import List
 
@@ -7,6 +8,7 @@ from .context import ContextBase
 
 _PROMPTS_DIR = Path(__file__).parent / "prompts"
 _MODEL = "gemini-2.5-flash"
+_DEBUG_DIR = Path(__file__).parent.parent.parent.parent / "debug"
 
 
 @dataclass(kw_only=True, frozen=True)
@@ -32,6 +34,7 @@ class PromptStepResponse:
     questions: List[PromptQuestion] | None
 
     error: str | None = None
+    raw_response: str | None = None
 
 
 class PromptBuilder(ContextBase):
@@ -43,18 +46,30 @@ class PromptBuilder(ContextBase):
         pass
 
     def step(self, prompt_step: PromptStep) -> PromptStepResponse:
-        payload = asdict(prompt_step)
-        response = self.ask_llm(input=json.dumps(payload))
+        formatted_user_input = f"{prompt_step.prompt_description}\n"
+        if prompt_step.questions:
+            for q in prompt_step.questions:
+                formatted_user_input += f"Question: {q.text}\nAnswer: {q.answer}\n"
+
+        payload = self.internal_prompt.replace("{{prompt_description}}", formatted_user_input)
+        
+        response = self.ask_llm(input=payload)
         if not response:
-            raise ValueError("Invalid response: Got NULL")
+            return PromptStepResponse(
+                output=None,
+                questions=None,
+                error="Received empty response from LLM. The LLM may be unavailable or the request timed out.",
+                raw_response=None
+            )
 
         try:
             output_dict = json.loads(response)
         except json.decoder.JSONDecodeError as e:
             return PromptStepResponse(
-                output=response,
+                output=None,
                 questions=None,
-                error=f"Invalid response from builder LLM: {str(e)}"
+                error="Failed to parse LLM response as JSON. The response may be malformed or incomplete.",
+                raw_response=response
             )
 
         # Coerce raw question dicts into PromptQuestion instances
