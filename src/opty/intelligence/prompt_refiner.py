@@ -30,6 +30,7 @@ class PromptRefineStepResponse:
     thinking: str | None = None
 
     error: str | None = None
+    raw_response: str | None = None
 
 
 @dataclass(kw_only=True, frozen=True)
@@ -50,6 +51,7 @@ class PromptRefiner(ContextBase):
         with open(_PROMPTS_DIR / "refiner.md", "r") as f:
             self.internal_prompt = f.read()
         self.max_steps = max_steps
+        self._step = 0
 
     def ask_optimizer(self, input: str) -> LlmResponse:
         pass
@@ -88,10 +90,11 @@ class PromptRefiner(ContextBase):
           )
         except TypeError as e:
             return PromptRefineStepResponse(
-                updated_prompt=refiner_response,
+                updated_prompt=refiner_response.text,
                 complete=True,
                 thinking=None,
-                error=str(e)
+                error=str(e),
+                raw_response=refiner_response.text
             )
 
     def __call__(

@@ -122,7 +122,6 @@ class OllamaPromptBuilder(PromptBuilder):
         response = self.client.chat(
             model=self.config.model_name,
             messages=[
-                {"role": "system", "content": self.internal_prompt},
                 {"role": "user", "content": input},
             ],
             format="json",

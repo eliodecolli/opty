@@ -95,7 +95,6 @@ class GeminiPromptBuilder(PromptBuilder):
                 ContentDict(role="user", parts=[PartDict(text=input)]),
             ],
             config=GenerateContentConfig(
-                system_instruction=self.internal_prompt,
                 temperature=0.2,
                 response_mime_type="application/json",
             ),
